@@ -451,7 +451,9 @@
    * @param {DataXY} [data={}]
    */
 
-  function xyCheck(data = {}) {
+  function xyCheck() {
+    let data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     if (!isAnyArray(data.x) || !isAnyArray(data.y)) {
       throw new Error('Data must be an object of x and y arrays');
     }
@@ -467,7 +469,8 @@
    * @return {DataXY}
    */
 
-  function xyEnsureGrowingX(data = {}) {
+  function xyEnsureGrowingX() {
+    let data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     xyCheck(data);
     const x = Array.from(data.x);
     const y = Array.from(data.y);
@@ -495,7 +498,8 @@
    * @return {{x:[],y:[]}} An object with the filtered data
    */
 
-  function xyFilterXPositive(data = {}) {
+  function xyFilterXPositive() {
+    let data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     xyCheck(data);
     const {
       x,
@@ -526,7 +530,8 @@
    * @return {{x,y,xIndex}} An object with the x/y value
    */
 
-  function xyMaxClosestYPoint(data, options = {}) {
+  function xyMaxClosestYPoint(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     xyCheck(data);
     const {
       x,
@@ -577,7 +582,8 @@
    * @return {{x,y,xIndex}} An object with the x/y value
    */
 
-  function xyMinClosestYPoint(data, options = {}) {
+  function xyMinClosestYPoint(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     xyCheck(data);
     const {
       x,
@@ -641,7 +647,8 @@
   class Shape1D {}
 
   class Gaussian$1 extends Shape1D {
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       super();
       const {
         fwhm = 500,
@@ -652,7 +659,8 @@
       this.height = height === undefined ? Math.sqrt(-GAUSSIAN_EXP_FACTOR$1 / Math.PI) / this.fwhm : height;
     }
 
-    fwhmToWidth(fwhm = this.fwhm) {
+    fwhmToWidth() {
+      let fwhm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.fwhm;
       return fwhmToWidth$2(fwhm);
     }
 
@@ -675,7 +683,8 @@
       return getFactor$2(area);
     }
 
-    getData(options = {}) {
+    getData() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       const {
         length,
         factor
@@ -741,7 +750,8 @@
    * @returns
    */
 
-  function getFactor$2(area = 0.9999) {
+  function getFactor$2() {
+    let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
     return Math.sqrt(2) * erfinv$1(area);
   }
   /**
@@ -749,7 +759,8 @@
    * @returns {Float64Array} Intensity values.
    */
 
-  function getData$3(options = {}) {
+  function getData$3() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let {
       length,
       factor = getFactor$2(),
@@ -780,7 +791,8 @@
   }
 
   class Lorentzian$1 extends Shape1D {
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       super();
       const {
         fwhm = 500,
@@ -790,7 +802,8 @@
       this.height = height === undefined ? 2 / Math.PI / fwhm : height;
     }
 
-    fwhmToWidth(fwhm = this.fwhm) {
+    fwhmToWidth() {
+      let fwhm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.fwhm;
       return fwhmToWidth$1(fwhm);
     }
 
@@ -813,7 +826,8 @@
       return getFactor$1(area);
     }
 
-    getData(options = {}) {
+    getData() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       const {
         length,
         factor
@@ -880,7 +894,8 @@
    * @returns
    */
 
-  function getFactor$1(area = 0.9999) {
+  function getFactor$1() {
+    let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
     return 2 * Math.tan(Math.PI * (area - 0.5));
   }
   /**
@@ -888,7 +903,8 @@
    * @returns {Float64Array} y values
    */
 
-  function getData$2(options = {}) {
+  function getData$2() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let {
       length,
       factor = getFactor$1(),
@@ -917,7 +933,8 @@
   }
 
   class PseudoVoigt$1 extends Shape1D {
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       super();
       const {
         fwhm = 500,
@@ -929,11 +946,14 @@
       this.height = height === undefined ? 1 / (mu / Math.sqrt(-GAUSSIAN_EXP_FACTOR$1 / Math.PI) * fwhm + (1 - mu) * fwhm * Math.PI / 2) : height;
     }
 
-    fwhmToWidth(fwhm = this.fwhm, mu = this.mu) {
+    fwhmToWidth() {
+      let fwhm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.fwhm;
+      let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.mu;
       return fwhmToWidth(fwhm, mu);
     }
 
-    widthToFWHM(width, mu = this.mu) {
+    widthToFWHM(width) {
+      let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.mu;
       return widthToFWHM(width, mu);
     }
 
@@ -953,7 +973,8 @@
       return getFactor(area);
     }
 
-    getData(options = {}) {
+    getData() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       const {
         length,
         factor
@@ -985,7 +1006,8 @@
    * @returns fwhm
    */
 
-  function widthToFWHM(width, mu = 0.5) {
+  function widthToFWHM(width) {
+    let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
     return width * (mu * ROOT_2LN2_MINUS_ONE$1 + 1);
   }
   /**
@@ -995,7 +1017,8 @@
    * @returns width
    */
 
-  function fwhmToWidth(fwhm, mu = 0.5) {
+  function fwhmToWidth(fwhm) {
+    let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
     return fwhm / (mu * ROOT_2LN2_MINUS_ONE$1 + 1);
   }
   /**
@@ -1022,7 +1045,9 @@
    * @returns
    */
 
-  function getFactor(area = 0.9999, mu = 0.5) {
+  function getFactor() {
+    let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
+    let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
     return mu < 1 ? getFactor$1(area) : getFactor$2(area);
   }
   /**
@@ -1030,7 +1055,8 @@
    * @returns {Float64Array} y values
    */
 
-  function getData$1(options = {}) {
+  function getData$1() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let {
       length,
       factor = getFactor(),
@@ -1063,7 +1089,9 @@
    * Generate a instance of a specific kind of shape.
    */
 
-  function getShape1D(kind, shapeOptions = {}) {
+  function getShape1D(kind) {
+    let shapeOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     switch (kind) {
       case 'gaussian':
         return new Gaussian$1(shapeOptions);
@@ -1093,7 +1121,8 @@
    * @param {number} [options.polynomial=3]
    * @return {array} Array containing the new ys (same length)
    */
-  function SavitzkyGolay(ys, xs, options = {}) {
+  function SavitzkyGolay(ys, xs) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     let {
       windowSize = 9,
       derivative = 0,
@@ -1296,7 +1325,8 @@
    * @return {Array<object>}
    */
 
-  function gsd(data, options = {}) {
+  function gsd(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       noiseLevel,
       sgOptions = {
@@ -1611,9 +1641,13 @@
   const isEnumerable = Object.prototype.propertyIsEnumerable;
   const getSymbols = Object.getOwnPropertySymbols;
 
-  var assignSymbols$1 = (target, ...args) => {
+  var assignSymbols$1 = function (target) {
     if (!isObject$1(target)) {
       throw new TypeError('expected the first argument to be an object');
+    }
+
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
     }
 
     if (args.length === 0 || typeof Symbol !== 'function' || typeof getSymbols !== 'function') {
@@ -1651,8 +1685,13 @@
     return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
   };
 
-  const assign = assignDeep$1.exports = (target, ...args) => {
+  const assign = assignDeep$1.exports = function (target) {
     let i = 0;
+
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
     if (isPrimitive(target)) target = args[i++];
     if (!target) target = {};
 
@@ -1711,7 +1750,8 @@
      * @param {number} [options.fwhm = 500] - Full Width at Half Maximum in the number of points in FWHM.
      * @param {number} [options.sd] - Standard deviation, if it's defined options.fwhm will be ignored and the value will be computed sd * Math.sqrt(8 * Math.LN2);
      */
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.fwhm = options.sd ? Gaussian.widthToFWHM(2 * options.sd) : options.fwhm ? options.fwhm : 500;
       this.height = options.height === undefined ? Math.sqrt(-GAUSSIAN_EXP_FACTOR / Math.PI) / this.fwhm : options.height;
     }
@@ -1724,7 +1764,8 @@
      */
 
 
-    getData(options = {}) {
+    getData() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let {
         length,
         factor = this.getFactor()
@@ -1762,7 +1803,8 @@
      */
 
 
-    getFactor(area = 0.9999) {
+    getFactor() {
+      let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
       return Gaussian.getFactor(area);
     }
     /**
@@ -1796,7 +1838,8 @@
      */
 
 
-    fwhmToWidth(fwhm = this.fwhm) {
+    fwhmToWidth() {
+      let fwhm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.fwhm;
       return Gaussian.fwhmToWidth(fwhm);
     }
     /**
@@ -1826,7 +1869,8 @@
    * @returns {number} - the y value of gaussian with the current parameters.
    */
 
-  Gaussian.fct = function fct(x, fwhm = 500) {
+  Gaussian.fct = function fct(x) {
+    let fwhm = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
     return Math.exp(GAUSSIAN_EXP_FACTOR * Math.pow(x / fwhm, 2));
   };
   /**
@@ -1860,7 +1904,8 @@
    */
 
 
-  Gaussian.getArea = function getArea(fwhm, options = {}) {
+  Gaussian.getArea = function getArea(fwhm) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       height = 1
     } = options;
@@ -1873,7 +1918,8 @@
    */
 
 
-  Gaussian.getFactor = function getFactor(area = 0.9999) {
+  Gaussian.getFactor = function getFactor() {
+    let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
     return Math.sqrt(2) * erfinv(area);
   };
 
@@ -1884,7 +1930,8 @@
      * @param {number} [options.fwhm = 500] - Full Width at Half Maximum in the number of points in FWHM.
      * @param {number} [options.sd] - Standard deviation, if it's defined options.fwhm will be ignored and the value will be computed sd * Math.sqrt(8 * Math.LN2);
      */
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.fwhm = options.fwhm === undefined ? 500 : options.fwhm;
       this.height = options.height === undefined ? 2 / Math.PI / this.fwhm : options.height;
     }
@@ -1897,7 +1944,8 @@
      */
 
 
-    getData(options = {}) {
+    getData() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let {
         length,
         factor = this.getFactor()
@@ -1935,7 +1983,8 @@
      */
 
 
-    getFactor(area = 0.9999) {
+    getFactor() {
+      let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
       return Lorentzian.getFactor(area);
     }
     /**
@@ -1957,7 +2006,8 @@
      */
 
 
-    fwhmToWidth(fwhm = this.fwhm) {
+    fwhmToWidth() {
+      let fwhm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.fwhm;
       return Lorentzian.fwhmToWidth(fwhm);
     }
     /**
@@ -2033,7 +2083,8 @@
    */
 
 
-  Lorentzian.getArea = function getArea(fwhm, options = {}) {
+  Lorentzian.getArea = function getArea(fwhm) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       height = 1
     } = options;
@@ -2046,7 +2097,8 @@
    */
 
 
-  Lorentzian.getFactor = function getFactor(area = 0.9999) {
+  Lorentzian.getFactor = function getFactor() {
+    let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
     return 2 * Math.tan(Math.PI * (area - 0.5));
   };
 
@@ -2057,7 +2109,8 @@
      * @param {number} [options.fwhm=500] - Full Width at Half Maximum in the number of points in FWHM.
      * @param {number} [options.mu=0.5] - ratio of gaussian contribution.
      */
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.mu = options.mu === undefined ? 0.5 : options.mu;
       this.fwhm = options.fwhm === undefined ? 500 : options.fwhm;
       this.height = options.height === undefined ? 1 / (this.mu / Math.sqrt(-GAUSSIAN_EXP_FACTOR / Math.PI) * this.fwhm + (1 - this.mu) * this.fwhm * Math.PI / 2) : options.height;
@@ -2071,7 +2124,8 @@
      */
 
 
-    getData(options = {}) {
+    getData() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let {
         length,
         factor = this.getFactor()
@@ -2110,7 +2164,9 @@
      */
 
 
-    getFactor(area = 0.9999, mu = this.mu) {
+    getFactor() {
+      let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
+      let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.mu;
       return PseudoVoigt.getFactor(area, mu);
     }
     /**
@@ -2144,7 +2200,9 @@
      */
 
 
-    fwhmToWidth(fwhm = this.fwhm, mu = this.mu) {
+    fwhmToWidth() {
+      let fwhm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.fwhm;
+      let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.mu;
       return PseudoVoigt.fwhmToWidth(fwhm, mu);
     }
     /**
@@ -2184,7 +2242,8 @@
    * @returns {number} - the y value of gaussian with the current parameters.
    */
 
-  PseudoVoigt.fct = function fct(x, fwhm, mu = 0.5) {
+  PseudoVoigt.fct = function fct(x, fwhm) {
+    let mu = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
     return (1 - mu) * Lorentzian.fct(x, fwhm) + mu * Gaussian.fct(x, fwhm);
   };
   /**
@@ -2195,7 +2254,8 @@
    */
 
 
-  PseudoVoigt.widthToFWHM = function widthToFWHM(width, mu = 0.5) {
+  PseudoVoigt.widthToFWHM = function widthToFWHM(width) {
+    let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
     return width * (mu * ROOT_2LN2_MINUS_ONE + 1);
   };
   /**
@@ -2206,7 +2266,8 @@
    */
 
 
-  PseudoVoigt.fwhmToWidth = function fwhmToWidth(fwhm, mu = 0.5) {
+  PseudoVoigt.fwhmToWidth = function fwhmToWidth(fwhm) {
+    let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
     return fwhm / (mu * ROOT_2LN2_MINUS_ONE + 1);
   };
   /**
@@ -2219,7 +2280,8 @@
    */
 
 
-  PseudoVoigt.getArea = function getArea(fwhm, options = {}) {
+  PseudoVoigt.getArea = function getArea(fwhm) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       height = 1,
       mu = 0.5
@@ -2234,7 +2296,9 @@
    */
 
 
-  PseudoVoigt.getFactor = function getFactor(area = 0.9999, mu = 0.5) {
+  PseudoVoigt.getFactor = function getFactor() {
+    let area = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.9999;
+    let mu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
     return mu < 1 ? Lorentzian.getFactor(area) : Gaussian.getFactor(area);
   };
 
@@ -2625,7 +2689,8 @@
   function inspectMatrix() {
     return inspectMatrixWithOptions(this);
   }
-  function inspectMatrixWithOptions(matrix, options = {}) {
+  function inspectMatrixWithOptions(matrix) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       maxRows = 15,
       maxColumns = 10,
@@ -3704,7 +3769,8 @@ ${indent}columns: ${matrix.columns}
       throw new RangeError('Submatrix indices are out of range');
     }
   }
-  function newArray(length, value = 0) {
+  function newArray(length) {
+    let value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     let array = [];
 
     for (let i = 0; i < length; i++) {
@@ -3996,7 +4062,9 @@ ${indent}columns: ${matrix.columns}
       return new Matrix(rows, columns).fill(1);
     }
 
-    static rand(rows, columns, options = {}) {
+    static rand(rows, columns) {
+      let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
       }
@@ -4015,7 +4083,9 @@ ${indent}columns: ${matrix.columns}
       return matrix;
     }
 
-    static randInt(rows, columns, options = {}) {
+    static randInt(rows, columns) {
+      let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
       }
@@ -4342,7 +4412,9 @@ ${indent}columns: ${matrix.columns}
       throw new Error('get method is unimplemented');
     }
 
-    repeat(options = {}) {
+    repeat() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
       }
@@ -4798,7 +4870,8 @@ ${indent}columns: ${matrix.columns}
       return diag;
     }
 
-    norm(type = 'frobenius') {
+    norm() {
+      let type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'frobenius';
       let result = 0;
 
       if (type === 'max') {
@@ -5063,7 +5136,9 @@ ${indent}columns: ${matrix.columns}
       return blockMult(x, y, r, c);
     }
 
-    scaleRows(options = {}) {
+    scaleRows() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
       }
@@ -5094,7 +5169,9 @@ ${indent}columns: ${matrix.columns}
       return newMatrix;
     }
 
-    scaleColumns(options = {}) {
+    scaleColumns() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
       }
@@ -5202,7 +5279,9 @@ ${indent}columns: ${matrix.columns}
       return result;
     }
 
-    sortRows(compareFunction = compareNumbers) {
+    sortRows() {
+      let compareFunction = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : compareNumbers;
+
       for (let i = 0; i < this.rows; i++) {
         this.setRow(i, this.getRow(i).sort(compareFunction));
       }
@@ -5210,7 +5289,9 @@ ${indent}columns: ${matrix.columns}
       return this;
     }
 
-    sortColumns(compareFunction = compareNumbers) {
+    sortColumns() {
+      let compareFunction = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : compareNumbers;
+
       for (let i = 0; i < this.columns; i++) {
         this.setColumn(i, this.getColumn(i).sort(compareFunction));
       }
@@ -5398,7 +5479,9 @@ ${indent}columns: ${matrix.columns}
       }
     }
 
-    variance(by, options = {}) {
+    variance(by) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       if (typeof by === 'object') {
         options = by;
         by = undefined;
@@ -5469,7 +5552,9 @@ ${indent}columns: ${matrix.columns}
       }
     }
 
-    center(by, options = {}) {
+    center(by) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       if (typeof by === 'object') {
         options = by;
         by = undefined;
@@ -5519,7 +5604,9 @@ ${indent}columns: ${matrix.columns}
       }
     }
 
-    scale(by, options = {}) {
+    scale(by) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       if (typeof by === 'object') {
         options = by;
         by = undefined;
@@ -6137,7 +6224,8 @@ ${indent}columns: ${matrix.columns}
   }
 
   class SingularValueDecomposition {
-    constructor(value, options = {}) {
+    constructor(value) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       value = WrapperMatrix2D.checkMatrix(value);
 
       if (value.isEmpty()) {
@@ -6723,7 +6811,8 @@ ${indent}columns: ${matrix.columns}
 
   }
 
-  function inverse(matrix, useSVD = false) {
+  function inverse(matrix) {
+    let useSVD = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     matrix = WrapperMatrix2D.checkMatrix(matrix);
 
     if (useSVD) {
@@ -6732,7 +6821,8 @@ ${indent}columns: ${matrix.columns}
       return solve(matrix, Matrix.eye(matrix.rows));
     }
   }
-  function solve(leftHandSide, rightHandSide, useSVD = false) {
+  function solve(leftHandSide, rightHandSide) {
+    let useSVD = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     leftHandSide = WrapperMatrix2D.checkMatrix(leftHandSide);
     rightHandSide = WrapperMatrix2D.checkMatrix(rightHandSide);
 
@@ -6867,7 +6957,8 @@ ${indent}columns: ${matrix.columns}
    * @return {{parameterValues: Array<number>, parameterError: number, iterations: number}}
    */
 
-  function levenbergMarquardt(data, parameterizedFunction, options = {}) {
+  function levenbergMarquardt(data, parameterizedFunction) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     let {
       checkTimeout,
       minValues,
@@ -6924,7 +7015,8 @@ ${indent}columns: ${matrix.columns}
   }
 
   const LEVENBERG_MARQUARDT = 1;
-  function selectMethod(optimizationOptions = {}) {
+  function selectMethod() {
+    let optimizationOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let {
       kind,
       options
@@ -6943,7 +7035,9 @@ ${indent}columns: ${matrix.columns}
     }
   }
 
-  function checkOptions(kind, options = {}) {
+  function checkOptions(kind) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     // eslint-disable-next-line default-case
     switch (kind) {
       case LEVENBERG_MARQUARDT:
@@ -7009,7 +7103,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
    */
 
-  function optimize(data, peakList, options = {}) {
+  function optimize(data, peakList) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     const {
       y,
       x,
@@ -7077,7 +7172,8 @@ ${indent}columns: ${matrix.columns}
     return result;
   }
 
-  function addStyle(serie, spectrum, options = {}) {
+  function addStyle(serie, spectrum) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     let {
       color = '#A9A9A9',
       opacity = 1,
@@ -7118,7 +7214,8 @@ ${indent}columns: ${matrix.columns}
    * Generate a jsgraph chart format from an array of Analysis
    */
 
-  function getJSGraph(analyses, options = {}) {
+  function getJSGraph(analyses) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       colors = COLORS,
       opacities = [1],
@@ -7189,12 +7286,14 @@ ${indent}columns: ${matrix.columns}
     };
   }
 
-  function getNormalizationAnnotations(filter = {}, boundary = {
-    y: {
-      min: '0px',
-      max: '2000px'
-    }
-  }) {
+  function getNormalizationAnnotations() {
+    let filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    let boundary = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+      y: {
+        min: '0px',
+        max: '2000px'
+      }
+    };
     let {
       exclusions = []
     } = filter;
@@ -7291,7 +7390,8 @@ ${indent}columns: ${matrix.columns}
       }
     }
 
-    getAnalyses(options = {}) {
+    getAnalyses() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       const {
         ids
       } = options;
@@ -7901,14 +8001,18 @@ ${indent}columns: ${matrix.columns}
 
   var cuthillMckee$1 = cuthillMckee_1;
 
-  const getClosestNumber = (array = [], goal = 0) => {
+  const getClosestNumber = function () {
+    let array = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let goal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     const closest = array.reduce((prev, curr) => {
       return Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev;
     });
     return closest;
   };
 
-  const getCloseIndex = (array = [], goal = 0) => {
+  const getCloseIndex = function () {
+    let array = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let goal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     const closest = getClosestNumber(array, goal);
     return array.indexOf(closest);
   };
@@ -7972,7 +8076,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {{corrected: Array<number>, error: number, iteration: number, baseline: Array<number>}}
    */
 
-  function airPLS(x, y, options = {}) {
+  function airPLS(x, y) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     let {
       maxIterations = 100,
       lambda = 100,
@@ -8068,7 +8173,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {BaselineOutput}
    */
 
-  function airPLSBaseline(ys, options = {}) {
+  function airPLSBaseline(ys) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const numberPoints = ys.length;
     let {
       x,
@@ -8353,7 +8459,8 @@ ${indent}columns: ${matrix.columns}
    * @return {{corrected: Array<number>, delta: number, iteration: number, baseline: Array<number>}}
    */
 
-  function baselineCorrectionRegression(x, y, options = {}) {
+  function baselineCorrectionRegression(x, y) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     let {
       maxIterations = 100,
       Regression = PolynomialRegression,
@@ -8435,7 +8542,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {BaselineOutput}
    */
 
-  function iterativePolynomialBaseline(ys, options = {}) {
+  function iterativePolynomialBaseline(ys) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const numberPoints = ys.length;
     let {
       x,
@@ -8483,7 +8591,8 @@ ${indent}columns: ${matrix.columns}
    * @return {Array}
    */
 
-  function xPadding(array, options = {}) {
+  function xPadding(array) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       size = 0,
       value = 0,
@@ -8561,7 +8670,8 @@ ${indent}columns: ${matrix.columns}
    * @return {Array<Number>}
    */
 
-  function xRolling(array, fct, options = {}) {
+  function xRolling(array, fct) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     xCheck(array);
     if (typeof fct !== 'function') throw Error('fct has to be a function');
     const {
@@ -8601,7 +8711,8 @@ ${indent}columns: ${matrix.columns}
    * @return {Array<Number>}
    */
 
-  function xRollingAverage(array, options = {}) {
+  function xRollingAverage(array) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return xRolling(array, mean, options);
   }
 
@@ -8616,7 +8727,8 @@ ${indent}columns: ${matrix.columns}
    * @return {Array<Number>}
    */
 
-  function xRollingMedian(array, options = {}) {
+  function xRollingMedian(array) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return xRolling(array, median, options);
   }
 
@@ -8633,7 +8745,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {BaselineOutput}
    */
 
-  function rollingAverageBaseline(ys, options = {}) {
+  function rollingAverageBaseline(ys) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let window = Math.max(Math.round(ys.length * 0.1), 2);
     let defaults = {
       window: window,
@@ -8680,7 +8793,9 @@ ${indent}columns: ${matrix.columns}
    * @param {Number} [options.windowS] - width of local window for smoothing, defaults to 8% of the specturm length
    */
 
-  function rollingBall(spectrum, options = {}) {
+  function rollingBall(spectrum) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     if (!isAnyArray(spectrum)) {
       throw new Error('Spectrum must be an array');
     }
@@ -8749,7 +8864,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {BaselineOutput}
    */
 
-  function rollingBallBaseline(ys, options = {}) {
+  function rollingBallBaseline(ys) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const baseline = rollingBall(ys, options);
     let corrected = new Float64Array(ys.length);
 
@@ -8776,7 +8892,8 @@ ${indent}columns: ${matrix.columns}
    * @returns {BaselineOutput}
    */
 
-  function rollingMedianBaseline(ys, options = {}) {
+  function rollingMedianBaseline(ys) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let window = Math.max(Math.round(ys.length * 0.1), 2);
     let defaults = {
       window: window,
@@ -8893,7 +9010,9 @@ ${indent}columns: ${matrix.columns}
    * @param {number} [options.from=Number.NEGATIVE_INFINITY] Specify min value of a zone
    * @param {number} [options.to=Number.POSITIVE_INFINITY] Specify max value of a zone
    */
-  function normalize$1(zones = [], options = {}) {
+  function normalize$1() {
+    let zones = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     if (zones.length === 0) return [];
     let {
       from = Number.NEGATIVE_INFINITY,
@@ -8941,7 +9060,9 @@ ${indent}columns: ${matrix.columns}
    * @param {number} [options.to=Number.POSITIVE_INFINITY] Specify max value of zones (after inversion)
    */
 
-  function invert(exclusions = [], options = {}) {
+  function invert() {
+    let exclusions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       from = Number.NEGATIVE_INFINITY,
       to = Number.POSITIVE_INFINITY
@@ -8997,7 +9118,8 @@ ${indent}columns: ${matrix.columns}
    * @param {number} [options.to=Number.POSITIVE_INFINITY] Specify max value of a zone
    */
 
-  function zonesWithPoints(zones, numberOfPoints, options = {}) {
+  function zonesWithPoints(zones, numberOfPoints) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     if (zones.length === 0) return zones;
     zones = normalize$1(zones, options);
     const totalSize = zones.reduce((previous, current) => {
@@ -9050,7 +9172,7 @@ ${indent}columns: ${matrix.columns}
     let j = 0; // index of output
 
     main: while (true) {
-      if (previousX >= nextX) throw new Error('x must be an increasing serie');
+      if (previousX >= nextX) throw new Error('x must be a growing series');
 
       while (previousX - max > 0) {
         // no overlap with original point, just consume current value
@@ -9132,7 +9254,7 @@ ${indent}columns: ${matrix.columns}
 
     let min = from - halfStep;
     let max = from + halfStep;
-    let previousX = Number.MIN_VALUE;
+    let previousX = Number.MIN_SAFE_INTEGER;
     let previousY = 0;
     let nextX = x[0] - initialOriginalStep;
     let nextY = 0;
@@ -9152,6 +9274,8 @@ ${indent}columns: ${matrix.columns}
     let add = 0;
 
     main: while (true) {
+      if (previousX >= nextX) throw new Error('x must be a growing series');
+
       if (previousX <= min && min <= nextX) {
         add = integral(0, min - previousX, slope, previousY);
         sumAtMin = currentValue + add;
@@ -9220,7 +9344,9 @@ ${indent}columns: ${matrix.columns}
    * @return {object<x: Array, y:Array>} new object with x / y array with the equally spaced data.
    */
 
-  function equallySpaced(arrayXY = {}, options = {}) {
+  function equallySpaced() {
+    let arrayXY = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       x,
       y
@@ -9326,7 +9452,9 @@ ${indent}columns: ${matrix.columns}
     };
   }
 
-  function getZones(from, to, exclusions = []) {
+  function getZones(from, to) {
+    let exclusions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
     if (from > to) {
       [from, to] = [to, from];
     } // in exclusions from and to have to be defined
@@ -9398,7 +9526,8 @@ ${indent}columns: ${matrix.columns}
    * @return {{x: Array<number>, y: Array<number>}}
    */
 
-  function filterX(points, options = {}) {
+  function filterX(points) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       x,
       y
@@ -9542,7 +9671,8 @@ ${indent}columns: ${matrix.columns}
     return r;
   }
 
-  function savitzkyGolay(data, h, options = {}) {
+  function savitzkyGolay(data, h) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     const {
       windowSize = 5,
       derivative = 1,
@@ -10165,7 +10295,9 @@ ${indent}columns: ${matrix.columns}
 
   var Stat = array;
 
-  function getNormalizedSpectrum(spectrum, options = {}) {
+  function getNormalizedSpectrum(spectrum) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     var _a;
 
     let data = {
@@ -10339,7 +10471,7 @@ ${indent}columns: ${matrix.columns}
 
         case 'iterativepolynomialbaseline':
           {
-            y = iterativePolynomialBaseline(y, undefined).correctedSpectrum;
+            y = iterativePolynomialBaseline(y, undefined, filterOptions).correctedSpectrum;
             break;
           }
 
@@ -12503,7 +12635,8 @@ ${indent}columns: ${matrix.columns}
     }
   }
 
-  function stringToRegexp(string, flags = 'i') {
+  function stringToRegexp(string) {
+    let flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'i';
     return new RegExp(string.replace(/[[\]\\{}()+*?.$^|]/g, match => `\\${match}`), flags);
   }
 
@@ -12526,7 +12659,9 @@ ${indent}columns: ${matrix.columns}
    * taken
    */
 
-  function getXYSpectrum(spectra = [], selector = {}) {
+  function getXYSpectrum() {
+    let spectra = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    let selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     if (spectra.length < 1) return;
     let {
       dataType,
@@ -12627,7 +12762,9 @@ ${indent}columns: ${matrix.columns}
     return;
   }
 
-  function getPossibleVariable(variables, selector = {}) {
+  function getPossibleVariable(variables) {
+    let selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     var _a, _b;
 
     const {
@@ -12691,7 +12828,8 @@ ${indent}columns: ${matrix.columns}
    */
 
   class Analysis {
-    constructor(options = {}) {
+    constructor() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.id = options.id || Math.random().toString(36).substring(2, 10);
       this.label = options.label || this.id;
       this.spectrumCallback = options.spectrumCallback;
@@ -12703,7 +12841,8 @@ ${indent}columns: ${matrix.columns}
      */
 
 
-    pushSpectrum(variables, options = {}) {
+    pushSpectrum(variables) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       this.spectra.push(standardizeData(variables, options, {
         spectrumCallback: this.spectrumCallback
       }));
@@ -12714,7 +12853,8 @@ ${indent}columns: ${matrix.columns}
      */
 
 
-    getXYSpectrum(selector = {}) {
+    getXYSpectrum() {
+      let selector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let id = JSON.stringify(selector);
 
       if (!this.cache[id]) {
@@ -12731,7 +12871,8 @@ ${indent}columns: ${matrix.columns}
      */
 
 
-    getXY(selector = {}) {
+    getXY() {
+      let selector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       let spectrum = this.getXYSpectrum(selector);
       if (!spectrum) return undefined;
       return {
@@ -12747,13 +12888,13 @@ ${indent}columns: ${matrix.columns}
      */
 
 
-    getNormalizedSpectrum(options = {}) {
+    getNormalizedSpectrum() {
+      let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       const {
         normalization,
         selector
       } = options;
       const spectrum = this.getXYSpectrum(selector);
-      console.log(selector, spectrum);
       if (!spectrum) return undefined;
       return getNormalizedSpectrum(spectrum, normalization);
     }
@@ -12856,7 +12997,9 @@ ${indent}columns: ${matrix.columns}
    * @param options
    * @returns
    */
-  function ensureString$1(blob, options = {}) {
+  function ensureString$1(blob) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     if (typeof blob === 'string') {
       return blob;
     }
@@ -12942,7 +13085,7 @@ ${indent}columns: ${matrix.columns}
       chromatogram.times[i] = spectrum.pageValue;
 
       for (let j = 0; j < existingGCMSFields.length; j++) {
-        chromatogram.series[existingGCMSFields[j]].data[i] = parseFloat(spectrum[existingGCMSFields[j]]);
+        chromatogram.series[existingGCMSFields[j]].data[i] = Number(spectrum[existingGCMSFields[j]]);
       }
 
       if (spectrum.data) {
@@ -12963,7 +13106,7 @@ ${indent}columns: ${matrix.columns}
     let floatArray = [];
 
     for (let i = 0; i < stringArray.length; i++) {
-      floatArray.push(parseFloat(stringArray[i]));
+      floatArray.push(Number(stringArray[i]));
     }
 
     return floatArray;
@@ -13183,9 +13326,9 @@ ${indent}columns: ${matrix.columns}
 
       if (values.length % 2 === 0) {
         for (let j = 0; j < values.length; j = j + 2) {
-          // takes around 40% of the time to add and parse the 2 values nearly exclusively because of parseFloat
-          currentData.x.push(parseFloat(values[j]) * spectrum.xFactor);
-          currentData.y.push(parseFloat(values[j + 1]) * spectrum.yFactor);
+          // takes around 40% of the time to add and parse the 2 values nearly exclusively because of Number
+          currentData.x.push(Number(values[j]) * spectrum.xFactor);
+          currentData.y.push(Number(values[j + 1]) * spectrum.yFactor);
         }
       } else {
         result.logs.push(`Format error: ${values}`);
@@ -13208,7 +13351,7 @@ ${indent}columns: ${matrix.columns}
       if (values.length % numberOfVariables === 0) {
         for (let j = 0; j < values.length; j++) {
           // todo should try to find a xFactor (y, ...)
-          currentData[variables[j % numberOfVariables]].push(parseFloat(values[j]));
+          currentData[variables[j % numberOfVariables]].push(Number(values[j]));
         }
       } else {
         result.logs.push(`Format error: ${values}`);
@@ -13229,8 +13372,8 @@ ${indent}columns: ${matrix.columns}
 
     for (let i = 1; i < lines.length; i++) {
       values = lines[i].trim().replace(removeSymbolRegExp, '').split(',');
-      currentData.x.push(parseFloat(values[0]));
-      currentData.y.push(parseFloat(values[1]));
+      currentData.x.push(Number(values[0]));
+      currentData.y.push(Number(values[1]));
     }
   }
 
@@ -13748,23 +13891,26 @@ ${indent}columns: ${matrix.columns}
     profiling: false
   };
   /**
+   * Parse a jcamp.
    *
-   * @param {string|ArrayBuffer} jcamp
+   * @param {string|ArrayBuffer|Uint8Array} jcamp
    * @param {object} [options]
-   * @param {number} [options.keepRecordsRegExp=/^$/] By default we don't keep meta information
-   * @param {number} [options.canonicDataLabels=true] Canonize the Labels (uppercase without symbol)
-   * @param {number} [options.canonicMetadataLabels=false] Canonize the metadata Labels (uppercase without symbol)
-   * @param {number} [options.dynamicTyping=false] Convert numbers to Number
-   * @param {number} [options.withoutXY=false] Remove the XY data
-   * @param {number} [options.chromatogram=false] Special post-processing for GC / HPLC / MS
-   * @param {number} [options.keepSpectra=false] Force to keep the spectra in case of 2D
-   * @param {number} [options.noContour=false] Don't calculate countour in case of 2D
-   * @param {number} [options.nbContourLevels=7] Number of positive / negative contour levels to calculate
-   * @param {number} [options.noiseMultiplier=5] Define for 2D the level as 5 times the median as default
-   * @param {number} [options.profiling=false] Add profiling information
+   * @param {number} [options.keepRecordsRegExp=/^$/] - By default we don't keep meta information.
+   * @param {number} [options.canonicDataLabels=true] - Canonize the Labels (uppercase without symbol).
+   * @param {number} [options.canonicMetadataLabels=false] - Canonize the metadata Labels (uppercase without symbol).
+   * @param {number} [options.dynamicTyping=false] - Convert numbers to Number.
+   * @param {number} [options.withoutXY=false] - Remove the XY data.
+   * @param {number} [options.chromatogram=false] - Special post-processing for GC / HPLC / MS.
+   * @param {number} [options.keepSpectra=false] - Force to keep the spectra in case of 2D.
+   * @param {number} [options.noContour=false] - Don't calculate countour in case of 2D.
+   * @param {number} [options.nbContourLevels=7] - Number of positive / negative contour levels to calculate.
+   * @param {number} [options.noiseMultiplier=5] - Define for 2D the level as 5 times the median as default.
+   * @param {number} [options.profiling=false] - Add profiling information.
+   * @returns {object}
    */
 
-  function convert(jcamp, options = {}) {
+  function convert(jcamp) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     jcamp = ensureString$1(jcamp);
     options = { ...defaultOptions,
       ...options
@@ -13898,32 +14044,32 @@ ${indent}columns: ${matrix.columns}
       } else if (canonicDataLabel === 'YUNITS') {
         spectrum.yUnits = dataValue;
       } else if (canonicDataLabel === 'FIRSTX') {
-        spectrum.firstX = parseFloat(dataValue);
+        spectrum.firstX = Number(dataValue);
       } else if (canonicDataLabel === 'LASTX') {
-        spectrum.lastX = parseFloat(dataValue);
+        spectrum.lastX = Number(dataValue);
       } else if (canonicDataLabel === 'FIRSTY') {
-        spectrum.firstY = parseFloat(dataValue);
+        spectrum.firstY = Number(dataValue);
       } else if (canonicDataLabel === 'LASTY') {
-        spectrum.lastY = parseFloat(dataValue);
+        spectrum.lastY = Number(dataValue);
       } else if (canonicDataLabel === 'NPOINTS') {
-        spectrum.nbPoints = parseFloat(dataValue);
+        spectrum.nbPoints = Number(dataValue);
       } else if (canonicDataLabel === 'XFACTOR') {
-        spectrum.xFactor = parseFloat(dataValue);
+        spectrum.xFactor = Number(dataValue);
       } else if (canonicDataLabel === 'YFACTOR') {
-        spectrum.yFactor = parseFloat(dataValue);
+        spectrum.yFactor = Number(dataValue);
       } else if (canonicDataLabel === 'MAXX') {
-        spectrum.maxX = parseFloat(dataValue);
+        spectrum.maxX = Number(dataValue);
       } else if (canonicDataLabel === 'MINX') {
-        spectrum.minX = parseFloat(dataValue);
+        spectrum.minX = Number(dataValue);
       } else if (canonicDataLabel === 'MAXY') {
-        spectrum.maxY = parseFloat(dataValue);
+        spectrum.maxY = Number(dataValue);
       } else if (canonicDataLabel === 'MINY') {
-        spectrum.minY = parseFloat(dataValue);
+        spectrum.minY = Number(dataValue);
       } else if (canonicDataLabel === 'DELTAX') {
-        spectrum.deltaX = parseFloat(dataValue);
+        spectrum.deltaX = Number(dataValue);
       } else if (canonicDataLabel === '.OBSERVEFREQUENCY' || canonicDataLabel === '$SFO1') {
         if (!spectrum.observeFrequency) {
-          spectrum.observeFrequency = parseFloat(dataValue);
+          spectrum.observeFrequency = Number(dataValue);
         }
       } else if (canonicDataLabel === '.OBSERVENUCLEUS') {
         if (!spectrum.xType) {
@@ -13934,7 +14080,7 @@ ${indent}columns: ${matrix.columns}
         currentEntry.shiftOffsetNum = 0;
 
         if (!spectrum.shiftOffsetVal) {
-          spectrum.shiftOffsetVal = parseFloat(dataValue);
+          spectrum.shiftOffsetVal = Number(dataValue);
         }
       } else if (canonicDataLabel === '$REFERENCEPOINT') ; else if (canonicDataLabel === 'VARNAME') {
         currentEntry.ntuples.varname = dataValue.split(ntuplesSeparatorRegExp);
@@ -13964,10 +14110,10 @@ ${indent}columns: ${matrix.columns}
         }
       } else if (canonicDataLabel === 'PAGE') {
         spectrum.page = dataValue.trim();
-        spectrum.pageValue = parseFloat(dataValue.replace(/^.*=/, ''));
+        spectrum.pageValue = Number(dataValue.replace(/^.*=/, ''));
         spectrum.pageSymbol = spectrum.page.replace(/[=].*/, '');
       } else if (canonicDataLabel === 'RETENTIONTIME') {
-        spectrum.pageValue = parseFloat(dataValue);
+        spectrum.pageValue = Number(dataValue);
       } else if (isMSField(canonicDataLabel)) {
         spectrum[convertMSFieldToLabel(canonicDataLabel)] = dataValue;
       } else if (canonicDataLabel === 'SAMPLEDESCRIPTION') {
@@ -14032,7 +14178,8 @@ ${indent}columns: ${matrix.columns}
    * @return {Analysis} - New class element with the given data
    */
 
-  function fromJcamp(jcamp, options = {}) {
+  function fromJcamp(jcamp) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let analysis = new Analysis(options);
     addJcamp(analysis, jcamp);
     return analysis;
@@ -14087,7 +14234,8 @@ ${indent}columns: ${matrix.columns}
    * @param {string} [options.encoding='utf8']
    * @returns {string}
    */
-  function ensureString(blob, options = {}) {
+  function ensureString(blob) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       encoding = 'utf8'
     } = options;
@@ -14105,7 +14253,8 @@ ${indent}columns: ${matrix.columns}
    * @param {object} [points={}] : Object of points contains property x (an array) and y (an array)
    * @return points
    */
-  function uniqueX(points = {}) {
+  function uniqueX() {
+    let points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     const {
       x,
       y
@@ -14155,7 +14304,8 @@ ${indent}columns: ${matrix.columns}
    * @return {object{x:<Array<number>>,y:<Array<number>>}
    */
 
-  function parseXY(text, options = {}) {
+  function parseXY(text) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let {
       rescale = false,
       uniqueX: uniqueX$1 = false,
@@ -14283,7 +14433,8 @@ ${indent}columns: ${matrix.columns}
    * @return {string} JCAMP of the input
    */
 
-  function fromText(data, options = {}) {
+  function fromText(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let analysis = new Analysis(options);
     const {
       info = {},
@@ -14402,7 +14553,8 @@ ${indent}columns: ${matrix.columns}
     return number;
   }
 
-  function peakTableCreator(data, options = {}) {
+  function peakTableCreator(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       xFactor = 1,
       yFactor = 1
@@ -14449,7 +14601,8 @@ ${indent}columns: ${matrix.columns}
     return lines;
   }
 
-  function xyDataCreator(data, options = {}) {
+  function xyDataCreator(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       xFactor = 1,
       yFactor = 1
@@ -14508,7 +14661,8 @@ ${indent}columns: ${matrix.columns}
    * @return {string} JCAMP of the input
    */
 
-  function fromJSON(data, options = {}) {
+  function fromJSON(data) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       meta = {},
       info = {},
@@ -14564,7 +14718,9 @@ ${(xydata ? xyDataCreator(data, {
    * @param {object} [options.forceNtuples = false] - force the ntuples format even if there is only x and y variables
    */
 
-  function fromVariables(variables = {}, options = {}) {
+  function fromVariables() {
+    let variables = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       info,
       meta,
@@ -14592,7 +14748,8 @@ ${(xydata ? xyDataCreator(data, {
     }
   }
 
-  function toJcamps(analysis, options = {}) {
+  function toJcamps(analysis) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     let jcamps = [];
 
     for (let spectrum of analysis.spectra) {
@@ -14621,11 +14778,14 @@ ${(xydata ? xyDataCreator(data, {
     return fromVariables(spectrum.variables, jcampOptions);
   }
 
-  function toJcamp(analysis, options = {}) {
+  function toJcamp(analysis) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     return toJcamps(analysis, options).join('\n');
   }
 
-  function toText(analysis, options = {}) {
+  function toText(analysis) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     // Export all the data to Csv
     if (!options.selector) {
       return exportText(analysis.spectra, options);
@@ -14650,9 +14810,12 @@ ${(xydata ? xyDataCreator(data, {
       let lines = [labels.join(fieldSeparator)];
 
       for (let lineIndex = 0; lineIndex < maxNumberData; lineIndex++) {
-        lines.push(variables.map(({
-          data
-        }) => data[lineIndex] === undefined ? '' : data[lineIndex]).join(fieldSeparator));
+        lines.push(variables.map(_ref => {
+          let {
+            data
+          } = _ref;
+          return data[lineIndex] === undefined ? '' : data[lineIndex];
+        }).join(fieldSeparator));
       }
 
       result[index] = lines.join(endOfLine);
@@ -14669,7 +14832,9 @@ ${(xydata ? xyDataCreator(data, {
 
   function peakPicking(spectrum,
   /** value to search (on x axis) */
-  target, options = {}) {
+  target) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
     var _a, _b, _c;
 
     const {
@@ -14732,7 +14897,9 @@ ${(xydata ? xyDataCreator(data, {
 
   /** Based on a x value we will return a peak*/
 
-  function autoPeakPicking(spectrum, options = {}) {
+  function autoPeakPicking(spectrum) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     var _a, _b;
 
     const {
@@ -14830,7 +14997,8 @@ ${(xydata ? xyDataCreator(data, {
    */
 
 
-  function getReactPlotJSON(analyses, query, options = {}) {
+  function getReactPlotJSON(analyses, query) {
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     const {
       enforceGrowing = false,
       xAxis: xAxisOptions = {},
@@ -14918,7 +15086,6 @@ ${(xydata ? xyDataCreator(data, {
   exports.getNormalizedSpectrum = getNormalizedSpectrum;
   exports.getReactPlotJSON = getReactPlotJSON;
   exports.peakPicking = peakPicking;
-  exports.savitzkyGolay = savitzkyGolay;
   exports.toJcamp = toJcamp;
   exports.toJcamps = toJcamps;
   exports.toText = toText;
