@@ -1,0 +1,334 @@
+<!-- Cheminfo common-spectrum example using jsGraph -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<script language="javascript" src="./common-spectrum.min.js"></script>
+		<script language="javascript" src="./jsgraph.min.js"></script>
+	</head>
+
+	<body>
+		common-spectrum<br>
+		<br>
+		<input type="file" name="localImportFile" id="importFileSelector"><br>
+		<br>
+		<input type="text" name="remoteImportFile" id="importFileName" value="noisy.jdx">
+		<input type="button" id="importAnalysis-Btn" value="Import analysis (Download)"/><br>
+		<br>
+		<input type="button" id="exportAnalysis-Btn" value="Export analysis"/>
+
+		<div width="800" height="300" id="chart0"></div>
+		<div width="800" height="300" id="chart1"></div>
+		<div width="800" height="300" id="chart2"></div>
+		<div width="800" height="300" id="chart3"></div>
+
+		<script>
+			// Main
+			//
+				const startTime = performance.now();
+				runtimeLog("Main: Start");
+
+				const url = document.getElementById("importFileName").value;
+
+				const spectraManager = new CommonSpectrum.AnalysesManager();
+
+				// Import buttons
+				//
+				document.getElementById("importAnalysis-Btn").addEventListener("click", handleRemoteImportFiles, false);
+				document.getElementById("importFileSelector").addEventListener("change", handleLocalImportFiles, false);
+
+				// List window functions
+				//let prop = propertiesToArray(window.CommonSpectrum);
+				//console.log(prop);
+
+				//for (var prop in window.CommonSpectrum)
+				//	console.log(prop);
+
+				runtimeLog("Main: End");
+			// End Main
+
+			// Async function for Analysis Processing
+			//
+			async function analysisProcessing(jcampImport) {
+				runtimeLog("Start analysisProcessing");
+
+				let analysis = await CommonSpectrum.fromJcamp(jcampImport);
+
+				analysis.spectra[0].variables.x.units = 'nm';
+				analysis.spectra[0].variables.y.units = 'yunits';
+				analysis.spectra[0].variables.z.units = 'zunits';
+
+//				let analysis = new CommonSpectrum.Analysis({ id: analysisID });
+//				analysis.pushSpectrum(
+//					{
+//						x: {
+//							data: [1, 2, 3, 4],
+//							units: 'xUnits',
+//							label: 'X axis',
+//						},
+//						y: {
+//							data: [3, 4, 5, 6],
+//							units: 'yUnits',
+//							label: 'Y axis',
+//						},
+//					},
+//					{
+//						title: 'My spectrum',
+//						dataType: 'UV-VIS',
+//						meta: {
+//							meta1: 'Meta 1',
+//							meta2: 'Meta 2',
+//						},
+//					},
+//				);
+
+//let xLabel = xAxis.label;
+//let yLabel = yAxis.label;
+//let xUnits = xAxis.units;
+//let yUnits = yAxis.units;
+
+//if (!xLabel) xLabel = currentData.variables.x.label;
+//if (!yLabel) yLabel = currentData.variables.y.label;
+//if (!xUnits) xUnits = currentData.variables.x.units;
+//if (!yUnits) yUnits = currentData.variables.y.units;
+
+				let smoothing = await analysis.getNormalizedSpectrum({
+					normalization: {
+							processing: 'Smoothing',
+						},
+					selector: { index: 0 }
+				});
+
+				analysis.pushSpectrum(smoothing.variables);
+				analysis.spectra[1].title = 'Smoothing';
+				analysis.spectra[1].dataType = analysis.spectra[0].dataType;
+				analysis.spectra[1].meta = analysis.spectra[0].meta;
+
+				let rollingballBaseline = await analysis.getNormalizedSpectrum({
+					normalization: {
+							filters: [{ 
+								name: 'rollingballBaseline',
+								options: {
+									windowM: 256,
+									windowS: 512
+								}
+						}],
+					},
+					selector: { index: 1 },
+				});
+
+				analysis.pushSpectrum(rollingballBaseline.variables);
+				analysis.spectra[2].title = 'Rolling ball baseline';
+				analysis.spectra[2].dataType = analysis.spectra[0].dataType;
+				analysis.spectra[2].meta = analysis.spectra[0].meta;
+
+				let rescaled = await analysis.getNormalizedSpectrum({
+					normalization: {
+							filters: [{ name: 'rescale' }],
+						},
+					selector: { index: 2 },
+				});
+
+				analysis.pushSpectrum(rescaled.variables);
+				analysis.spectra[3].title = 'Rescaled';
+				analysis.spectra[3].dataType = analysis.spectra[0].dataType;
+				analysis.spectra[3].meta = analysis.spectra[0].meta;
+
+				spectraManager.addAnalysis(analysis);
+				console.log(spectraManager);
+
+				const jsgraph0 = await CommonSpectrum.JSGraph.getJSGraph([analysis], { selector: { index: 0 } });
+				jsgraphDrawing(jsgraph0, 'chart0');
+
+				const jsgraph1 = await CommonSpectrum.JSGraph.getJSGraph([analysis], { selector: { index: 1 } });
+				jsgraphDrawing(jsgraph1, 'chart1');
+
+				const jsgraph2 = await CommonSpectrum.JSGraph.getJSGraph([analysis], { selector: { index: 2 } });
+				jsgraphDrawing(jsgraph2, 'chart2');
+
+				const jsgraph3 = await CommonSpectrum.JSGraph.getJSGraph([analysis], { selector: { index: 3 } });
+				jsgraphDrawing(jsgraph3, 'chart3');
+
+				let jcampExport = await CommonSpectrum.toJcamp(analysis, {
+					info: {
+						owner: 'cheminfo',
+						origin: 'Common Spectrum',
+					},
+				});
+
+				// Export button
+				//
+				document.getElementById("exportAnalysis-Btn").addEventListener("click", function(){
+					const filename = analysis.id;
+					exportAnalysis(filename, jcampExport);
+				}, false);
+
+				runtimeLog("End analysisProcessing");
+			}
+
+			// Sub function for drawing jsgraph
+			//
+			function jsgraphDrawing(jsgraph, ElementId) {
+console.log(jsgraph);
+
+				let jsgraphTitle = jsgraph.series[0].name;
+				if (jsgraph.series[0].dataType) {
+					jsgraphTitle += " (" + jsgraph.series[0].dataType + ")";
+				}
+
+				const jsgraphOptions = {
+					title: jsgraphTitle,
+					paddingTop: 40, // Top padding, important if there's a title
+					paddingBottom: 40,
+					paddingLeft: 20,
+					paddingRight: 20,
+
+					// If you want to add dummy lines to make the graph appear as a rectangle
+					close: {
+						left: true,
+						right: true,
+						top: true,
+						bottom: true
+					},
+
+					// Color of the closing lines
+					closeColor: 'black',
+
+					// Default font size and font used for the whole graph. Can be overridden for each component
+					fontSize: 12,
+					fontFamily: 'Myriad Pro, Helvetica, Arial',
+					plugins: {
+						zoom: {
+							zoomMode: 'xy',
+						},
+					},
+					mouseActions: [
+						{
+							plugin: 'zoom',
+							shift: false,
+							ctrl: false,
+						},
+						{
+							plugin: 'zoom',
+							type: 'mousewheel',
+							options: {
+								direction: 'y',
+							},
+						},
+						{
+							plugin: 'zoom',
+							type: 'dblclick',
+							options: {
+								mode: 'total',
+							},
+						},
+					],
+					keyActions: [],
+					// Where clicking somewhere on the graph unselects the shape
+					shapesUnselectOnClick: true,
+
+					// Whether there can be only one shape selected at the same time
+					shapesUniqueSelection: true,
+
+					// Axes. Continue reading to understand this syntax
+					axes: {}
+				};
+
+				if (!jsgraph.options) {
+					jsgraph.options = jsgraphOptions;
+				}
+
+				const graph = Graph.fromJSON(jsgraph, document.getElementById(ElementId));
+				graph.resize(1000, 400);
+				graph.draw();
+			}
+
+
+			// Sub function for loading a local jcamp file
+			//
+			function handleLocalImportFiles() {
+				const fileList = this.files; /* now you can work with the file list */
+				runtimeLog('Start handleLocalImportFiles');
+
+				if (fileList.length === 0) {
+					runtimeLog('No file selected');
+					return;
+				}
+				if (fileList.length) {
+					importFileName = fileList[0].name;
+					runtimeLog(importFileName);
+				}
+
+				const reader = new FileReader();
+				reader.onload = async function fileReadCompleted() {
+					runtimeLog('reader.onload - start');
+
+					let data = await this.result;
+
+					let jcampImport = await this.result;
+					analysisProcessing(jcampImport);
+
+					runtimeLog(jcampImport);
+					runtimeLog('reader.onload - end');
+				};
+				reader.readAsText(fileList[0]);
+				runtimeLog('End handleLocalImportFiles');
+			}
+
+			// Sub function for downloading a remote jcamp file
+			//
+			async function handleRemoteImportFiles() {
+				runtimeLog("Start handleRemoteImportFiles");
+
+				let response = await fetch(url);
+				let jcampImport = await response.text();
+console.log(jcampImport);
+				analysisProcessing(jcampImport);
+
+				runtimeLog("End handleRemoteImportFiles");
+			}
+
+			// Sub function for exporting a jcamp file
+			//
+			function exportAnalysis(filename, text) {
+				let element = document.createElement('a');
+				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+				element.setAttribute('download', filename);
+
+				element.style.display = 'none';
+				document.body.appendChild(element);
+
+				element.click();
+
+				document.body.removeChild(element);
+			}
+
+			// Sub function for javascript runtime (in ms)
+			//
+			function runtimeLog(logEntry) {
+				console.log(logEntry + " (" + (performance.now() - startTime).toFixed(4) + " ms)");
+			}
+
+			// Sub function for recursive object listing
+			//
+			function propertiesToArray(obj) {
+				const isObject = val =>
+					typeof val === 'object' && !Array.isArray(val);
+
+				const addDelimiter = (a, b) =>
+					a ? `${a}.${b}` : b;
+
+				const paths = (obj = {}, head = '') => {
+					return Object.entries(obj)
+						.reduce((product, [key, value]) => 
+							{
+								let fullPath = addDelimiter(head, key)
+								return isObject(value) ?
+									product.concat(paths(value, fullPath))
+								: product.concat(fullPath)
+							}, []);
+				}
+				return paths(obj);
+			}
+		</script>
+	</body>
+</html>
