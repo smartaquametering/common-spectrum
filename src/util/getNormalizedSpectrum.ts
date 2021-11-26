@@ -63,6 +63,18 @@ export function getNormalizedSpectrum(
   let { x, y } = filterX(data, { from, to });
 
   switch (processing) {
+    case 'Smoothing':
+      if (options.processing) {
+        y = savitzkyGolay(y, 1, {
+          derivative: 0,
+          polynomial: 3,
+          windowSize: 5,
+          pad: 'post',
+          padValue: 'replicate'
+        });
+        x = x.slice(2, x.length - 2);
+      }
+      break;
     case 'firstDerivative':
       if (options.processing) {
         newSpectrum.variables.y.units = '';

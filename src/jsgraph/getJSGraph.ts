@@ -64,6 +64,7 @@ export function getJSGraph(analyses: Analysis[], options: JSGraphOptions = {}) {
       opacity: opacities[i % opacities.length],
       lineWidth: linesWidth[i % linesWidth.length],
     });
+    serie.dataType = currentData.dataType;
     serie.data = {
       x: currentData.variables.x.data,
       y: currentData.variables.y.data,
